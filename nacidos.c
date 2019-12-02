@@ -10,8 +10,8 @@ int main(int argc, char **argv)
 	provListADT prov=newProvList();
 	FILE *f1=fopen(argv[1],"r"); //abro el archivo de provincias que recibi como paramatro
 	FILE *f2=fopen(argv[2], "r"); //abro el archivo de nacimientos que recibi como parametro
-	if(!(validateFile(f1)) || !(validateFile(f2))){
-		printf("ERROR: No se pudieron abrir los archivos\n");
+	if(f1 == NULL || f2 == NULL){
+		printf("ERROR al arir los archivos.\n");
 	}
 
 	cargarProvincias(f1,prov); //cargo las estaciones al TAD

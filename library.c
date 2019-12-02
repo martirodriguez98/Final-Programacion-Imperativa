@@ -6,10 +6,6 @@
 #include "library.h"
 #include "provListADT.h"
 
-int validateFile(FILE * f){
-	return f!=NULL;
-}
-
 void cargarProvincias(FILE * f, provListADT prov){
 	char format[]="%zu,%[^\n]";
 	size_t id;

@@ -1,7 +1,7 @@
 #include "provListADT.h"
 #include <stdlib.h>
 #include <string.h>
-
+#define BLOQUE 20
 typedef struct tProvince{
 	char * name;
 	int id;
@@ -27,12 +27,13 @@ static void copyName(tProvince * prov, char * name){
 	prov->name=NULL;
 	while(name[i]!=0){
 		if(i%BLOQUE==0){
-			prov->name=realloc(1,sizeof(i+BLOQUE));
+			prov->name=realloc(prov->name,i+BLOQUE);
 		}
 		prov->name[i]=name[i];
 		i++;
 	}
-	prov->name=realloc(1,sizeof(i));
+	prov->name=realloc(prov->name,i);
+	prov->name[i]=0;
 }
 
 void addProvince(provListADT p, size_t id, char * name){
