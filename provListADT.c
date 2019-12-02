@@ -31,7 +31,7 @@ tProvince * addRec(tProvince * first ,size_t id, char * name){
 	int c;
 	if(first==NULL||(c=(strcmp(name,first->name))<0)){
 		tProvince * prov=calloc(1,sizeof(tProvince));
-		prov->name=malloc(sizeof(name)); //PUEDE FALLAR
+		prov->name=malloc(strlen(name)+1); //PUEDE FALLAR
 		strcpy(prov->name,name);
 		printf("%s\n", prov->name);
 		prov->id=id;
