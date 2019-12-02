@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 	FILE *f1=fopen(argv[1],"r"); //abro el archivo de provincias que recibi como paramatro
 	FILE *f2=fopen(argv[2], "r"); //abro el archivo de nacimientos que recibi como parametro
 	if(f1 == NULL || f2 == NULL){
-		printf("ERROR al arir los archivos.\n");
+		printf("ERROR al abrir los archivos.\n");
 	}
 
 	cargarProvincias(f1,prov); //cargo las estaciones al TAD
