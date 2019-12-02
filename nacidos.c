@@ -1,6 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "library.h"
+#include <stdio.h>
 int main(int argc, char **argv)
 {
 	if(argc!=3)
@@ -17,6 +16,10 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	cagarProvincias(f,prov); //cargo las estaciones al TAD
+	cargarProvincias(f,prov); //cargo las estaciones al TAD
 	fclose(f); //cuando termino de leer todas las provincias y agregarlas, cierro el archivo
+	//freeProvList(prov);
+
+	//print(prov);
+	return 0;
 }

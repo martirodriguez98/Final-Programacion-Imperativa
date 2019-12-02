@@ -1,4 +1,9 @@
-#define MAX_LINELENGTH 40
+#define MAX_LINELENGTH 100
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
+#include "library.h"
 #include "provListADT.h"
 
 void cargarProvincias(FILE * f, provListADT prov){
@@ -6,7 +11,7 @@ void cargarProvincias(FILE * f, provListADT prov){
 	int cont=0;
 	int numCampo;
 
-	while(fgets(buf, BLOQUE2, f)){
+	while(fgets(buf, MAX_LINELENGTH, f)){
 		numCampo=0;
 		cont++;
 
@@ -14,7 +19,6 @@ void cargarProvincias(FILE * f, provListADT prov){
 			continue;	//me salteo el header que no quiero leer
 
 		char * campo = strtok(buf, ",\n"); //empiezo a recorrer la linea del CSV
-		int len;
 		size_t id;
 		char * name;
 		while(campo){
@@ -30,8 +34,9 @@ void cargarProvincias(FILE * f, provListADT prov){
 			campo=strtok(NULL, ",\n");	//avanzo de campo
 			numCampo++;
 		}
-		addProvince(province, id, name);
+		addProvince(prov, id, name);
 		free(name);
 	}
 	free(buf);
 }
+

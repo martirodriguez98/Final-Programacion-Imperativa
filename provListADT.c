@@ -1,4 +1,6 @@
 #include "provListADT.h"
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct tProvince{
 	char * name;
@@ -29,8 +31,9 @@ tProvince * addRec(tProvince * first ,size_t id, char * name){
 	int c;
 	if(first==NULL||(c=(strcmp(name,first->name))<0)){
 		tProvince * prov=calloc(1,sizeof(tProvince));
-		prov->name=malloc(sizeof(strlen(name))); //PUEDE FALLAR
+		prov->name=malloc(sizeof(name)); //PUEDE FALLAR
 		strcpy(prov->name,name);
+		printf("%s\n", prov->name);
 		prov->id=id;
 		prov->tail=first;
 		return prov;
@@ -46,18 +49,27 @@ size_t isEmpty(provListADT p){
 	return p->first==NULL;
 }
 
+static void freeRec(tProvince * first);
 
-
-/*
 void freeProvList(provListADT p){
-
+	freeRec(p->first);
+	free(p);
 }
-*/
+
+static void freeRec(tProvince * first){
+	tProvince * aux=first;
+	if(aux==NULL)
+		return;
+	free(first->name);
+	free(first);
+	freeRec(aux->tail);
+}
+
 
 void print(provListADT p){
 	tProvince * aux=p->first;
 	while(aux!=NULL){
-		printf("%d\t%s\n",aux->id,aux->name);
+		printf("%2d %s\n",aux->id, aux->name);
 		aux=aux->tail;
 	}
 }
