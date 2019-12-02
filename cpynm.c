@@ -1,14 +1,15 @@
 
-static void copyName(tProvince * prov, char * name){
+static char * copyName(char * name){
 	int i=0;
-	prov->name=NULL;
+	char * aux=NULL;
 	while(name[i]!=0){
 		if(i%BLOQUE==0){
-			prov->name=realloc(prov->name,i+BLOQUE);
+			aux=realloc(aux,i+BLOQUE);
 		}
-		prov->name[i]=name[i];
+		aux[i]=name[i];
 		i++;
 	}
-	prov->name=realloc(prov->name,i);
-	prov->name[i]=0;
+	aux=realloc(aux,i);
+	aux[i]=0;
+	return aux;
 }
