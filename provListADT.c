@@ -33,14 +33,10 @@ tProvince * addRec(tProvince * first ,size_t id, char * name){
 		tProvince * prov=calloc(1,sizeof(tProvince));
 		prov->name=malloc(strlen(name)+1); //PUEDE FALLAR
 		strcpy(prov->name,name);
-		printf("%s\n", prov->name);
 		prov->id=id;
 		prov->tail=first;
 		return prov;
 	}
-	if(c==0)
-		return first;
-
 	first->tail=addRec(first->tail,id,name);
 	return first;
 }
@@ -57,12 +53,12 @@ void freeProvList(provListADT p){
 }
 
 static void freeRec(tProvince * first){
-	tProvince * aux=first;
-	if(aux==NULL)
+	if(first==NULL)
 		return;
+	freeRec(first->tail);
 	free(first->name);
 	free(first);
-	freeRec(aux->tail);
+	
 }
 
 

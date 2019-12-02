@@ -8,18 +8,21 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	provListADT prov=newProvList();
-	FILE *f=fopen(argv[1],"r"); //abro el archivo de provincias que recibi como paramatro
-
-	if(f==NULL)
-	{
-		printf("ERROR: No se pudo abrir el archivo\n");
-		return 1;
+	FILE *f1=fopen(argv[1],"r"); //abro el archivo de provincias que recibi como paramatro
+	FILE *f2=fopen(argv[2], "r"); //abro el archivo de nacimientos que recibi como parametro
+	if(!(validateFile(f1)) || !(validateFile(f2))){
+		printf("ERROR: No se pudieron abrir los archivos\n");
 	}
 
-	cargarProvincias(f,prov); //cargo las estaciones al TAD
-	fclose(f); //cuando termino de leer todas las provincias y agregarlas, cierro el archivo
-	//freeProvList(prov);
+	cargarProvincias(f1,prov); //cargo las estaciones al TAD
+	fclose(f1); //cuando termino de leer todas las provincias y agregarlas, cierro el archivo
+	
+	//cargarDatos(f2, prov);
+	
 
-	//print(prov);
+
+	print(prov);
+	freeProvList(prov);
+
 	return 0;
 }
