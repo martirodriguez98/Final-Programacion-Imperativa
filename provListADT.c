@@ -22,6 +22,20 @@ provListADT newProvList(){
 
 static tProvince * addRec(tProvince * first ,size_t id, char * name);
 
+static void copyName(tProvince * prov, char * name){
+	int i=0;
+	prov->name=NULL;
+	while(name[i]!=0){
+		if(i%BLOQUE==0){
+			prov->name=realloc(1,sizeof(i+BLOQUE));
+		}
+		prov->name[i]=name[i];
+		i++;
+	}
+	prov->name=realloc(1,sizeof(i));
+}
+
+
 void addProvince(provListADT p, size_t id, char * name){
 	p->first=addRec(p->first, id, name);
 	p->total_provinces+=1; //siempre se agregara la provincia pues no se repiten
@@ -31,8 +45,7 @@ tProvince * addRec(tProvince * first ,size_t id, char * name){
 	int c;
 	if(first==NULL||(c=(strcmp(name,first->name))<0)){
 		tProvince * prov=calloc(1,sizeof(tProvince));
-		prov->name=malloc(strlen(name)+1); //PUEDE FALLAR
-		strcpy(prov->name,name);
+		copyName(prov,name)
 		printf("%s\n", prov->name);
 		prov->id=id;
 		prov->tail=first;
