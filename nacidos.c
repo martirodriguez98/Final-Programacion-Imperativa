@@ -17,11 +17,12 @@ int main(int argc, char **argv)
 	cargarProvincias(f1,prov); //cargo las estaciones al TAD
 	fclose(f1); //cuando termino de leer todas las provincias y agregarlas, cierro el archivo
 	
-	//cargarDatos(f2, prov);
-	
+	cargarDatos(f2, prov);
+		
 
 
 	print(prov);
+
 	freeProvList(prov);
 
 	return 0;

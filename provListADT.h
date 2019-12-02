@@ -8,5 +8,6 @@ provListADT newProvList();
 void addProvince(provListADT p, size_t id, char * name);
 void freeProvList(provListADT p);
 void print(provListADT p); //para imprimir, despues lo borramos
-
+void cargarProvincias(FILE * f, provListADT prov);
+void cargarDatos(FILE * f, provListADT prov);
 #endif
