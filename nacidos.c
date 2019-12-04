@@ -14,18 +14,14 @@ int main(int argc, char **argv)
 		printf("ERROR al abrir los archivos.\n");
 		return 1;
 	}
-	char format[]="%zu,%[^\n]";
-	cargarProvincias(f1,prov, format); //cargo las estaciones al TAD
+
+	char separators[]=",";	//para poder cambiar el formato si se leyera de otra manera
+	cargarProvincias(f1,prov, separators); //cargo las estaciones al TAD
 	fclose(f1); //cuando termino de leer todas las provincias y agregarlas, cierro el archivo
-	char format2[]="%zu,%zu,%*zu,%zu,%*[^\n]";
-	
-	cargarDatos(f2, prov, format2);
-		
-
-
-	print(prov);
+	cargarDatos(f2, prov, separators);
 	query1(prov);
-
+	query2(prov);
+	query3(prov);
 	freeAll(prov);
 
 	return 0;

@@ -1,7 +1,7 @@
 #include "yearADT.h"
 
 typedef struct tYear{
-	size_t year;
+	int year;
 	long int male_births;
 	long int female_births;
 	long int no_sex_births;
@@ -13,14 +13,14 @@ typedef struct yearListCDT{
 	long int total_years;
 }yearListCDT;
 
-void addYear(yearADT y, size_t year){
+void addYear(yearADT y, int year){
 	int flag=0;
 	y->first=addRecYear(y->first,year,&flag);
 	if(flag)
 		y->total_years+=1;
 }
 
-static tYear * addRecYear(tYear * first, size_t year, int *flag){
+static tYear * addRecYear(tYear * first, int year, int *flag){
 	int c;
 	if(first==NULL || (c=year-first->year)<0)
 	{

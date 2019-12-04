@@ -5,4 +5,6 @@
 #include <stdlib.h>
 
 void query1(provListADT p);
+void query2(provListADT p);
+void query3(provListADT p);
 #endif
