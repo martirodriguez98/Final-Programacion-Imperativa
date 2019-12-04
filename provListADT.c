@@ -279,7 +279,7 @@ void toBegin(provListADT p){
 }
 
 int hasNext(provListADT p){
-	return p->currentYear!=NULL;
+	return p->currentProv!=NULL;
 }
 
 int nextYear(provListADT p, long int * male, long int * female){
