@@ -1,10 +1,10 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 #include <stdio.h>
-#include "provListADT.h"
+#include "dataADT.h"
 #include <stdlib.h>
 
-void query1(provListADT p);
-void query2(provListADT p);
-void query3(provListADT p);
+void query1(dataADT p);
+void query2(dataADT p);
+void query3(dataADT p);
 #endif

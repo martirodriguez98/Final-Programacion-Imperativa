@@ -2,7 +2,7 @@
 
 #define MAX_LINELENGTH 40
 
-void query1(provListADT p){
+void query1(dataADT p){
 	FILE * f = fopen("query1.csv", "w");
 	fprintf(f,"Provincia;Nacimientos\n");
 	long int b;
@@ -15,7 +15,8 @@ void query1(provListADT p){
 	fclose(f);
 	return;
 }
-void query2(provListADT p){
+
+void query2(dataADT p){
 	FILE * f = fopen("query2.csv", "w");
 	fprintf(f,"Año;Varón;Mujer\n");
 	toBeginYear(p);
@@ -28,12 +29,9 @@ void query2(provListADT p){
 	fclose(f);
 	return;
 }
-void query3(provListADT p){
+
+void query3(dataADT p){
 	FILE * f = fopen("query3.csv", "w");
 	copyPercentageData(p, f);
 	return;
 }
-
-
-
-
