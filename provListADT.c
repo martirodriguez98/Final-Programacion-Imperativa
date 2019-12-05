@@ -33,11 +33,11 @@ provListADT newProvList(){
 	return calloc(1, sizeof(provListCDT));
 }
 
-static char * copyName(char * name){
+static char * copyName(char * name){	//copia el string nombre leido del csv a un vector y lo devuelve
 	char * s=NULL;
 	int i;
-		for (i = 0; name[i]!=0 && name[i]!='\r' && name[i]!='\n'; i++){
-			if(i%BLOQUE == 0){
+		for (i = 0; name[i]!=0 && name[i]!='\r' && name[i]!='\n'; i++){	//se considera omitir el caracter /r pues estaba presente en los
+			if(i%BLOQUE == 0){					//csv y generaba problemas en la impresion del string
 				s=realloc(s,i+BLOQUE);
 			}
 			s[i]=name[i];
@@ -47,7 +47,7 @@ static char * copyName(char * name){
 	return s;
 }
 
-static void copyStatic(char * st, char * source){
+static void copyStatic(char * st, char * source){	//copia un string a un vector estatico (fijo)
 	int i=0;
 	while(source[i] != 0){
 		st[i] = source[i];
@@ -95,7 +95,7 @@ void print(provListADT p){
 
 }
 
-static void listToArray(provListADT p, tProvince * arr){
+static void listToArray(provListADT p, tProvince * arr){	//pasa la lista de provincias a un array
 	int i=0;
 	arr[i++] = *(p->first);
 	tProvince * aux = p->first;
@@ -133,7 +133,7 @@ void cargarProvincias(FILE * f, provListADT prov, char * separators){
 	free(buf);
 }
 				
-static tProvince * getProvince(provListADT p, int id){
+static tProvince * getProvince(provListADT p, int id){	//busca la provincia en la lista y la devuelve
   
     tProvince * aux=p->first;
 
@@ -148,7 +148,7 @@ static tProvince * getProvince(provListADT p, int id){
     return NULL;
 }
 
-static void addData(provListADT prov, int year, int id, char sex){
+static void addData(provListADT prov, int year, int id, char sex){	//añade datos a la provincia buscandola por id
 	tProvince * aux = getProvince(prov, id);
 	prov->total_births+=1;
 	aux->births+=1;
@@ -191,7 +191,7 @@ void cargarDatos(FILE * f, provListADT prov, char * separators){
 	
 	//free(provinceArr);
 }
-static void addBySex(tYear * year, char sex){
+static void addBySex(tYear * year, char sex){	//añade nacimiento al año dependiendo del sexo
 	switch(sex-'0'){
 		case 1: year->male_births+=1;break;
 		case 2: year->female_births+=1;break;
