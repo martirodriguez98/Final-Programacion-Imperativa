@@ -33,11 +33,11 @@ provListADT newProvList(){
 	return calloc(1, sizeof(provListCDT));
 }
 
-static char * copyName(char * name){
+static char * copyName(char * name){	//copia el string nombre leido del csv a un vector y lo devuelve
 	char * s=NULL;
 	int i;
-		for (i = 0; name[i]!=0 && name[i]!='\r' && name[i]!='\n'; i++){
-			if(i%BLOQUE == 0){
+		for (i = 0; name[i]!=0 && name[i]!='\r' && name[i]!='\n'; i++){	//se considera omitir el caracter /r pues estaba presente en los
+			if(i%BLOQUE == 0){					//csv y generaba problemas en la impresion del string
 				s=realloc(s,i+BLOQUE);
 			}
 			s[i]=name[i];
@@ -47,7 +47,7 @@ static char * copyName(char * name){
 	return s;
 }
 
-static void copyStatic(char * st, char * source){
+static void copyStatic(char * st, char * source){	//copia un string a un vector estatico (fijo)
 	int i=0;
 	while(source[i] != 0){
 		st[i] = source[i];
@@ -69,7 +69,6 @@ static tProvince * addRec(tProvince * first ,int id, char name[]){
 		tProvince * prov=calloc(1,sizeof(tProvince));
 		prov->name=copyName(name);
 		prov->id=id;
-		//printf("%zu %s\n", prov->id, prov->name);
 		prov->tail=first;
 		return prov;
 	}
@@ -95,7 +94,7 @@ void print(provListADT p){
 
 }
 
-static void listToArray(provListADT p, tProvince * arr){
+static void listToArray(provListADT p, tProvince * arr){	//pasa la lista de provincias a un array
 	int i=0;
 	arr[i++] = *(p->first);
 	tProvince * aux = p->first;
@@ -133,7 +132,7 @@ void cargarProvincias(FILE * f, provListADT prov, char * separators){
 	free(buf);
 }
 				
-static tProvince * getProvince(provListADT p, int id){
+static tProvince * getProvince(provListADT p, int id){	//busca la provincia en la lista y la devuelve
   
     tProvince * aux=p->first;
 
@@ -148,7 +147,7 @@ static tProvince * getProvince(provListADT p, int id){
     return NULL;
 }
 
-static void addData(provListADT prov, int year, int id, char sex){
+static void addData(provListADT prov, int year, int id, char sex){	//añade datos a la provincia buscandola por id
 	tProvince * aux = getProvince(prov, id);
 	prov->total_births+=1;
 	aux->births+=1;
@@ -160,8 +159,6 @@ void cargarDatos(FILE * f, provListADT prov, char * separators){
 	char * buf = malloc(BUFFER);
 	int cont=0;
 	int numCampo;
-	//tProvince * provinceArr = malloc(sizeof(tProvince) * (prov->total_provinces));
-	//listToArray(prov, provinceArr);
 	while(fgets(buf, BUFFER, f)){
 		int year;
 		int id;
@@ -185,13 +182,8 @@ void cargarDatos(FILE * f, provListADT prov, char * separators){
 		addData(prov, year, id, sex);
 	}
 	free(buf);
-
-	//for(int i=0; i<prov->total_provinces;i++)
-	//	printf("%zu,%s\n", provinceArr[i].id, provinceArr[i].name);
-	
-	//free(provinceArr);
 }
-static void addBySex(tYear * year, char sex){
+static void addBySex(tYear * year, char sex){	//añade nacimiento al año dependiendo del sexo
 	switch(sex-'0'){
 		case 1: year->male_births+=1;break;
 		case 2: year->female_births+=1;break;
@@ -299,8 +291,8 @@ int hasNextYear(provListADT p){
 }
 
 
-int compareProvinces(const void * p1, const void * p2){
-	int c2 = ((tProvince *)p2)->births;
+int compareProvinces(const void * p1, const void * p2){	//funcion para comparar provincias, primero por porcentaje de nacimientos
+	int c2 = ((tProvince *)p2)->births;		//y luego alfabeticamente
 	int c1 = ((tProvince *)p1)->births;
 
 	int cmp = (c2 > c1) - (c2 < c1);
@@ -313,13 +305,13 @@ int compareProvinces(const void * p1, const void * p2){
 void copyPercentageData(provListADT p, FILE * f){
 	fprintf(f, "Provincia;Porcentajes\n");
 	tProvince * provinces = malloc((p->total_provinces) * sizeof(tProvince));
-	listToArray(p, provinces);
+	listToArray(p, provinces);	//se pasa la lista a un array para poder ordenarla con la funcion qsort
 	int i;
 	for(i=0; i<p->total_provinces; i++)
-		provinces[i].births = (provinces[i].births*100.0)/p->total_births;
-	qsort(provinces, p->total_provinces, sizeof(tProvince), &compareProvinces);
+		provinces[i].births = (provinces[i].births*100.0)/p->total_births;	//se calculan los porcentajes
+	qsort(provinces, p->total_provinces, sizeof(tProvince), &compareProvinces);	//se usa la funcion qsort para ordenar las provincias
 	for(i=0 ; i<p->total_provinces ;i++){
-		fprintf(f, "%s;%%%ld\n",provinces[i].name,provinces[i].births);
+		fprintf(f, "%s;%%%ld\n",provinces[i].name,provinces[i].births);		//se pasan las provincias en el orden pedido para el query
 	}
 	free(provinces);
 }
