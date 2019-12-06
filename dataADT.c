@@ -29,17 +29,17 @@ typedef struct dataCDT{
 	struct tYear * currentYear;
 }dataCDT;
 
-static char * copyName(char * name);
-static void copyStatic(char * st, char * source);
+static char * copyName(char * name);//copia el string nombre leido del csv a un vector y lo devuelve
+static void copyStatic(char * st, char * source);//copia un string a un vector estatico (fijo)
 static tProvince * addRec(tProvince * firstProv ,int id, char name[]);
-static void listToArray(dataADT p, tProvince * arr);
-static tProvince * getProvince(dataADT p, int id);
-static void addData(dataADT prov, int year, int id, char sex);
+static void listToArray(dataADT p, tProvince * arr);//pasa la lista de provincias a un array
+static tProvince * getProvince(dataADT p, int id);//busca la provincia en la lista y la devuelve
+static void addData(dataADT prov, int year, int id, char sex);//añade datos a la provincia buscandola por id
 static void freeRec(tProvince * firstProv);
 static void freeProvList(dataADT p);
 static void freeRecYear(tYear *firstYear);
 static void freeYearList(dataADT p);
-static void addBySex(tYear * year, char sex);
+static void addBySex(tYear * year, char sex);//añade nacimiento al año dependiendo del sexo
 static tYear * addRecYear(tYear * firstYear, int year, int *flag, char sex);
 
 dataADT newProvList(){
@@ -49,8 +49,8 @@ dataADT newProvList(){
 static char * copyName(char * name){
 	char * s=NULL;
 	int i;
-		for (i = 0; name[i]!=0 && name[i]!='\r' && name[i]!='\n'; i++){
-			if(i%BLOCK == 0){
+		for (i = 0; name[i]!=0 && name[i]!='\r' && name[i]!='\n'; i++){//se considera omitir el caracter /r pues estaba presente en los
+			if(i%BLOCK == 0){											//csv y generaba problemas en la impresion del string
 				s=realloc(s,i+BLOCK);
 			}
 			s[i]=name[i];
