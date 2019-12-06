@@ -2,7 +2,6 @@
 #define dataADT_H
 #include <stdio.h>
 #define ERROR -1
-#define ERROR_MESSAGE "Error al reservar memoria\n"
 typedef struct dataCDT * dataADT;
 
 dataADT newProvList();//crea la lista de provincias y años

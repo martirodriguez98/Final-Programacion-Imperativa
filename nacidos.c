@@ -1,5 +1,7 @@
 #include "library.h"
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 int main(int argc, char **argv)
 {
 	if(argc!=3)
@@ -9,36 +11,36 @@ int main(int argc, char **argv)
 	}
 	dataADT prov=newProvList();
 	if(prov == NULL){
-		printf(ERROR_MESSAGE);
-		return ERROR;
+		fprintf(stderr, "ERROR: %s\n", strerror(ENOMEM));
+		exit(ENOMEM);
 	}		
 
 	FILE *f1=fopen(argv[1],"r"); //abro el archivo de provincias que recibi como paramatro
 	FILE *f2=fopen(argv[2], "r"); //abro el archivo de nacimientos que recibi como parametro
 	if(f1 == NULL || f2 == NULL){
-		printf("ERROR al abrir los archivos.\n");
-		return 1;
+		fprintf(stderr, "ERROR: %s\n", strerror(ENOENT));
+		exit(ENOENT);
 	}
 
 	char separators[]=",";	//para poder cambiar el formato si se leyera de otra manera
 	if(loadProvinces(f1,prov, separators) == ERROR){ //cargo las estaciones al TAD
-		printf(ERROR_MESSAGE);
+		fprintf(stderr, "ERROR: %s\n", strerror(ENOMEM));
 		freeAll(prov);
-		return ERROR;
+		exit(ENOMEM);
 	}
 	fclose(f1); //cuando termino de leer todas las provincias y agregarlas, cierro el archivo
 	
 	if(loadData(f2, prov, separators) == ERROR){
-		printf(ERROR_MESSAGE);
+		fprintf(stderr, "ERROR: %s\n", strerror(ENOMEM));
 		freeAll(prov);
-		return ERROR;
+		exit(ENOMEM);
 	}
 	query1(prov);
 	query2(prov);
 	if(query3(prov)==ERROR){
-		printf(ERROR_MESSAGE);
+		fprintf(stderr, "ERROR: %s\n", strerror(ENOMEM));
 		freeAll(prov);
-		return ERROR;
+		exit(ENOMEM);
 	}
 	freeAll(prov);
 	return 0;

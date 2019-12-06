@@ -98,7 +98,7 @@ static tProvince * addRec(tProvince * firstProv ,int id, char name[], int *flag)
 		tProvince * prov=calloc(1,sizeof(tProvince));
 		if(prov == NULL){
 			*flag = 1;
-			return NULL;}
+			return firstProv;}	//para no desconectar la lista
 		prov->name=copyName(name);
 		if(prov->name == NULL){
 			*flag = 1;
@@ -315,7 +315,7 @@ static tYear * addRecYear(tYear * firstYear, int year, int *flag, char sex, int 
 		tYear *aux=calloc(1,sizeof(tYear));
 		if(aux == NULL){
 			*errorcheck = 1;
-			return NULL;
+			return firstYear;	//para no desconectar la lista
 		}
 		aux->year=year;
 		aux->tail=firstYear;
