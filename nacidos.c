@@ -8,6 +8,11 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	dataADT prov=newProvList();
+	if(prov == NULL){
+		printf(ERROR_MESSAGE);
+		return ERROR;
+	}		
+
 	FILE *f1=fopen(argv[1],"r"); //abro el archivo de provincias que recibi como paramatro
 	FILE *f2=fopen(argv[2], "r"); //abro el archivo de nacimientos que recibi como parametro
 	if(f1 == NULL || f2 == NULL){
@@ -16,13 +21,25 @@ int main(int argc, char **argv)
 	}
 
 	char separators[]=",";	//para poder cambiar el formato si se leyera de otra manera
-	loadProvincies(f1,prov, separators); //cargo las estaciones al TAD
+	if(loadProvinces(f1,prov, separators) == ERROR){ //cargo las estaciones al TAD
+		printf(ERROR_MESSAGE);
+		freeAll(prov);
+		return ERROR;
+	}
 	fclose(f1); //cuando termino de leer todas las provincias y agregarlas, cierro el archivo
-	loadData(f2, prov, separators);
+	
+	if(loadData(f2, prov, separators) == ERROR){
+		printf(ERROR_MESSAGE);
+		freeAll(prov);
+		return ERROR;
+	}
 	query1(prov);
 	query2(prov);
-	query3(prov);
+	if(query3(prov)==ERROR){
+		printf(ERROR_MESSAGE);
+		freeAll(prov);
+		return ERROR;
+	}
 	freeAll(prov);
-	print(prov);
 	return 0;
 }

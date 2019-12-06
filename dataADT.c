@@ -31,16 +31,16 @@ typedef struct dataCDT{
 
 static char * copyName(char * name);//copia el string nombre leido del csv a un vector y lo devuelve
 static void copyStatic(char * st, char * source);//copia un string a un vector estatico (fijo)
-static tProvince * addRec(tProvince * firstProv ,int id, char name[]);
+static tProvince * addRec(tProvince * firstProv ,int id, char name[], int * flag);
 static void listToArray(dataADT p, tProvince * arr);//pasa la lista de provincias a un array
 static tProvince * getProvince(dataADT p, int id);//busca la provincia en la lista y la devuelve
-static void addData(dataADT prov, int year, int id, char sex);//añade datos a la provincia buscandola por id
+static int addData(dataADT prov, int year, int id, char sex);//añade datos a la provincia buscandola por id
 static void freeRec(tProvince * firstProv);
 static void freeProvList(dataADT p);
 static void freeRecYear(tYear *firstYear);
 static void freeYearList(dataADT p);
 static void addBySex(tYear * year, char sex);//añade nacimiento al año dependiendo del sexo
-static tYear * addRecYear(tYear * firstYear, int year, int *flag, char sex);
+static tYear * addRecYear(tYear * firstYear, int year, int *flag, char sex, int * errorcheck);
 
 dataADT newProvList(){
 	return calloc(1, sizeof(dataCDT));
@@ -51,7 +51,13 @@ static char * copyName(char * name){
 	int i;
 		for (i = 0; name[i]!=0 && name[i]!='\r' && name[i]!='\n'; i++){//se considera omitir el caracter /r pues estaba presente en los
 			if(i%BLOCK == 0){											//csv y generaba problemas en la impresion del string
-				s=realloc(s,i+BLOCK);
+				char * aux = s;
+				aux=realloc(s,i+BLOCK);
+				if(aux == NULL){
+					free(s);
+					return NULL;
+				}
+				s=aux;
 			}
 			s[i]=name[i];
 		}
@@ -79,27 +85,37 @@ static void listToArray(dataADT p, tProvince * arr){
 	}
 }
 
-void addProvince(dataADT p, int id, char name[]){
-	p->firstProv=addRec(p->firstProv, id, name);
+int addProvince(dataADT p, int id, char name[]){
+	int flag = 0;
+	p->firstProv=addRec(p->firstProv, id, name, &flag);
 	p->total_provinces+=1; //siempre se agregara la provincia pues no se repiten
+	return 1;
 }
 
-static tProvince * addRec(tProvince * firstProv ,int id, char name[]){
+static tProvince * addRec(tProvince * firstProv ,int id, char name[], int *flag){
 	int c;
 	if(firstProv==NULL||(c=(strcmp(name,firstProv->name))<0)){
 		tProvince * prov=calloc(1,sizeof(tProvince));
+		if(prov == NULL){
+			*flag = 1;
+			return NULL;}
 		prov->name=copyName(name);
+		if(prov->name == NULL){
+			*flag = 1;
+		}
 		prov->id=id;
 		prov->tail=firstProv;
 		return prov;
 	}
-	firstProv->tail=addRec(firstProv->tail,id,name);
+	firstProv->tail=addRec(firstProv->tail,id,name,flag);
 	return firstProv;
 }
 
-void loadProvincies(FILE * f, dataADT prov, char * separators){
+int loadProvinces(FILE * f, dataADT prov, char * separators){
 	
 	char * buf = malloc(BUFFER);
+	if(buf == NULL)
+		return ERROR;
 	int cont=0;
 	int numCampo;
 	while(fgets(buf, BUFFER, f)){
@@ -115,7 +131,8 @@ void loadProvincies(FILE * f, dataADT prov, char * separators){
 				id=atoi(campo);
 			}
 			else if(numCampo == 1){
-				addProvince(prov, id, campo);
+				if(addProvince(prov, id, campo)==ERROR)
+					return ERROR;
 			}
 			campo = strtok(NULL, separators);
 			numCampo++;
@@ -123,11 +140,14 @@ void loadProvincies(FILE * f, dataADT prov, char * separators){
 
 	}
 	free(buf);
+	return 1;
 }
 
-void loadData(FILE * f, dataADT prov, char * separators){
+int loadData(FILE * f, dataADT prov, char * separators){
 
 	char * buf = malloc(BUFFER);
+	if(buf==NULL)
+		return ERROR;
 	int cont=0;
 	int numCampo;
 	while(fgets(buf, BUFFER, f)){
@@ -150,30 +170,31 @@ void loadData(FILE * f, dataADT prov, char * separators){
 			numCampo++;
 
 		}
-		addData(prov, year, id, sex);
+		if(addData(prov, year, id, sex) == ERROR){
+			return ERROR;
+		}
 	}
 	free(buf);
+	return 1;
 }
 
-static void addData(dataADT prov, int year, int id, char sex){
+static int addData(dataADT prov, int year, int id, char sex){
 	tProvince * aux = getProvince(prov, id);
 	prov->total_births+=1;
 	aux->births+=1;
-	addYear(prov, year, sex);
+	if(addYear(prov, year, sex) == ERROR)
+		return ERROR;
+	return 1;
 }
 
+
 static tProvince * getProvince(dataADT p, int id){
-  
     tProvince * aux=p->firstProv;
-
     while(aux != NULL){
-
         if(aux->id==id)
-            return aux;
-        
+            return aux;       
         aux=aux->tail;
     }
-
     return NULL;
 }
 
@@ -234,9 +255,11 @@ static int compareProvinces(const void * p1, const void * p2){
 	}
 }
 
-void copyPercentageData(dataADT p, FILE * f){
+int copyPercentageData(dataADT p, FILE * f){
 	fprintf(f, "Provincia;Porcentajes\n");
 	tProvince * provinces = malloc((p->total_provinces) * sizeof(tProvince));
+	if(provinces == NULL)
+		return ERROR;
 	listToArray(p, provinces);
 	int i;
 	for(i=0; i<p->total_provinces; i++)
@@ -246,6 +269,7 @@ void copyPercentageData(dataADT p, FILE * f){
 		fprintf(f, "%s;%%%ld\n",provinces[i].name,provinces[i].births);
 	}
 	free(provinces);
+	return 1;
 }
 
 void toBeginYear(dataADT p){
@@ -264,11 +288,16 @@ int hasNextYear(dataADT p){
 	return p->currentYear!=NULL;
 }
 
-void addYear(dataADT p, int year, char sex){
+int addYear(dataADT p, int year, char sex){
 	int flag=0;
-	p->firstYear=addRecYear(p->firstYear,year,&flag,sex);
+	int errorcheck=0;
+	p->firstYear=addRecYear(p->firstYear,year,&flag,sex,&errorcheck);
+	if(errorcheck){
+		return ERROR;
+	}
 	if(flag)
 		p->total_years+=1;
+	return 1;
 }
 
 static void addBySex(tYear * year, char sex){
@@ -280,10 +309,14 @@ static void addBySex(tYear * year, char sex){
 	return;
 }
 
-static tYear * addRecYear(tYear * firstYear, int year, int *flag, char sex){
+static tYear * addRecYear(tYear * firstYear, int year, int *flag, char sex, int *errorcheck){
 	int c;
 	if(firstYear==NULL || (c=year-firstYear->year)<0){
 		tYear *aux=calloc(1,sizeof(tYear));
+		if(aux == NULL){
+			*errorcheck = 1;
+			return NULL;
+		}
 		aux->year=year;
 		aux->tail=firstYear;
 		addBySex(aux, sex);
@@ -294,7 +327,7 @@ static tYear * addRecYear(tYear * firstYear, int year, int *flag, char sex){
 		addBySex(firstYear, sex);
 		return firstYear;
 	}
-	firstYear->tail=addRecYear(firstYear->tail,year,flag,sex);
+	firstYear->tail=addRecYear(firstYear->tail,year,flag,sex,errorcheck);
 	return firstYear;
 }
 

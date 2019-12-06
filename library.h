@@ -4,7 +4,8 @@
 #include "dataADT.h"
 #include <stdlib.h>
 
+//funciones que realizan los queries
 void query1(dataADT p);
 void query2(dataADT p);
-void query3(dataADT p);
+int query3(dataADT p);
 #endif

@@ -30,8 +30,9 @@ void query2(dataADT p){
 	return;
 }
 
-void query3(dataADT p){
+int query3(dataADT p){
 	FILE * f = fopen("query3.csv", "w");
-	copyPercentageData(p, f);
-	return;
+	if(copyPercentageData(p, f) == ERROR)
+		return ERROR;
+	return 1;
 }
