@@ -90,7 +90,6 @@ static tProvince * addRec(tProvince * firstProv ,int id, char name[]){
 		tProvince * prov=calloc(1,sizeof(tProvince));
 		prov->name=copyName(name);
 		prov->id=id;
-		//printf("%zu %s\n", prov->id, prov->name);
 		prov->tail=firstProv;
 		return prov;
 	}
@@ -131,8 +130,6 @@ void loadData(FILE * f, dataADT prov, char * separators){
 	char * buf = malloc(BUFFER);
 	int cont=0;
 	int numCampo;
-	//tProvince * provinceArr = malloc(sizeof(tProvince) * (prov->total_provinces));
-	//listToArray(prov, provinceArr);
 	while(fgets(buf, BUFFER, f)){
 		int year;
 		int id;
@@ -156,11 +153,6 @@ void loadData(FILE * f, dataADT prov, char * separators){
 		addData(prov, year, id, sex);
 	}
 	free(buf);
-
-	//for(int i=0; i<prov->total_provinces;i++)
-	//	printf("%zu,%s\n", provinceArr[i].id, provinceArr[i].name);
-	
-	//free(provinceArr);
 }
 
 static void addData(dataADT prov, int year, int id, char sex){

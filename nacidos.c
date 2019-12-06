@@ -23,6 +23,6 @@ int main(int argc, char **argv)
 	query2(prov);
 	query3(prov);
 	freeAll(prov);
-
+	print(prov);
 	return 0;
 }
