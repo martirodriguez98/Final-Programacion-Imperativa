@@ -181,7 +181,8 @@ int loadData(FILE * f, dataADT prov, char * separators){
 static int addData(dataADT prov, int year, int id, char sex){
 	tProvince * aux = getProvince(prov, id);
 	prov->total_births+=1;
-	aux->births+=1;
+	if(aux != NULL)
+		aux->births+=1;
 	if(addYear(prov, year, sex) == ERROR)
 		return ERROR;
 	return 1;
